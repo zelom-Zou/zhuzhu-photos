@@ -15,9 +15,9 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// 相对路径，兼容 GitHub Pages 的 /仓库名/ 子路径
+// 相对路径，兼容 GitHub Pages 的 /仓库名/ 子路径；线上加载压缩版，原图留在 photos/
 function photoUrl(name) {
-  return 'photos/' + encodeURIComponent(name);
+  return 'photos-web/' + encodeURIComponent(name);
 }
 
 function shuffle(arr) {

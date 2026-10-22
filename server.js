@@ -59,14 +59,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (rel.startsWith('/photos/')) {
-    const name = rel.slice('/photos/'.length);
+  if (rel.startsWith('/photos/') || rel.startsWith('/photos-web/')) {
+    const dir = rel.startsWith('/photos-web/') ? 'photos-web' : 'photos';
+    const name = rel.slice(dir.length + 2);
     if (!name || name.includes('/') || name.includes('\\')) {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end('Not Found');
       return;
     }
-    serveFile(res, path.join(ROOT, 'photos', name));
+    serveFile(res, path.join(ROOT, dir, name));
     return;
   }
 
