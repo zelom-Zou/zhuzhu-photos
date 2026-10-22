@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>猪猪的照片空间</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <p class="eyebrow">Photo Journal</p>
+    <h1>猪猪的照片空间</h1>
+    <p class="subtitle">把走过的时光留在纸上。</p>
+    <div class="header-rule"><span class="diamond"></span></div>
+  </header>
+
+  <main>
+    <section class="section dynamic-section">
+      <div class="section-label">
+        <h2>流光</h2>
+        <p>照片在这里随机滚动</p>
+      </div>
+      <div class="marquee" id="marquee-1">
+        <div class="marquee-track" id="track-1"></div>
+      </div>
+      <div class="marquee reverse" id="marquee-2">
+        <div class="marquee-track" id="track-2"></div>
+      </div>
+    </section>
+
+    <section class="section static-section">
+      <div class="section-label">
+        <h2>静置</h2>
+        <p>把喜欢的一刻安放在这里</p>
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="header-rule"><span class="diamond"></span></div>
+    <p>猪猪的照片空间 · 把走过的时光留在纸上。</p>
+  </footer>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <img id="lightbox-img" alt="原图预览">
+    <button class="lightbox-close" id="lightbox-close" aria-label="关闭">关闭</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
