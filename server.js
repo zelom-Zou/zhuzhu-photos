@@ -53,14 +53,24 @@ const server = http.createServer((req, res) => {
   if (rel === '/') rel = '/index.html';
 
   // 只放行站点文件与照片，其余一律 404
-  const STATIC_FILES = new Set(['/index.html', '/style.css', '/app.js', '/photos.json']);
+  const STATIC_FILES = new Set([
+    '/index.html',
+    '/style.css',
+    '/app.js',
+    '/photos.json',
+    '/photos-online.json',
+  ]);
   if (STATIC_FILES.has(rel)) {
     serveFile(res, path.join(ROOT, rel.slice(1)));
     return;
   }
 
-  if (rel.startsWith('/photos/') || rel.startsWith('/photos-web/')) {
-    const dir = rel.startsWith('/photos-web/') ? 'photos-web' : 'photos';
+  if (
+    rel.startsWith('/photos/') ||
+    rel.startsWith('/photos-web/') ||
+    rel.startsWith('/photos-online/')
+  ) {
+    const dir = rel.split('/')[1];
     const name = rel.slice(dir.length + 2);
     if (!name || name.includes('/') || name.includes('\\')) {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });

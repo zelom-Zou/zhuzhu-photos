@@ -1,13 +1,42 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="auth-pending">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>猪猪的照片空间</title>
+  <script>
+    // 已解锁的访问直接放行，不闪屏；未解锁时保持遮挡
+    try {
+      if (localStorage.getItem('zhuzhu-unlocked') === '1') {
+        document.documentElement.classList.remove('auth-pending');
+      }
+    } catch (e) {}
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="paper-grain" aria-hidden="true"></div>
+
+  <div class="auth-gate" id="auth-gate">
+    <div class="auth-card">
+      <p class="eyebrow">Photo Journal</p>
+      <h1>猪猪的照片空间</h1>
+      <p class="auth-hint">私人相册，请输入口令。</p>
+      <form class="auth-form" id="auth-form">
+        <input
+          id="auth-input"
+          type="password"
+          placeholder="口令"
+          autocomplete="current-password"
+          spellcheck="false"
+          required
+        >
+        <button type="submit">进入</button>
+      </form>
+      <p class="auth-error" id="auth-error" role="alert" aria-live="polite"></p>
+    </div>
+  </div>
 
   <header class="site-header">
     <p class="eyebrow">Photo Journal</p>
@@ -17,6 +46,37 @@
   </header>
 
   <main>
+    <section class="section upload-section">
+      <div class="section-label">
+        <h2>添页</h2>
+        <p>照片在设备内压缩并校正方向，只保留最近 10 张</p>
+      </div>
+
+      <div class="upload-card" id="upload-card" tabindex="0" role="button" aria-label="选择或拖入要上传的照片">
+        <span class="upload-symbol" aria-hidden="true">＋</span>
+        <p class="upload-title">点击选择照片</p>
+        <p class="upload-note">也可以把照片直接拖进来，电脑和手机都支持</p>
+        <input id="photo-input" type="file" accept="image/*" multiple hidden>
+        <p class="upload-status" id="upload-status" role="status" aria-live="polite">还没有选择照片</p>
+        <p class="upload-count" id="upload-count">当前展示 0 / 10 张</p>
+      </div>
+
+      <details class="token-panel" id="token-panel">
+        <summary>上传设置</summary>
+        <div class="token-body">
+          <p class="token-hint">
+            在 GitHub 设置里创建一个 Fine-grained token，只授权本仓库的 Contents 读写权限，粘贴到这里。
+            Token 仅保存在本浏览器，不会随网站发布。
+          </p>
+          <input id="token-input" type="password" placeholder="ghp_… 或 github_pat_…" autocomplete="off" spellcheck="false">
+          <div class="token-actions">
+            <button id="token-save" type="button">保存 Token</button>
+            <button id="token-clear" type="button" class="is-plain">清除</button>
+          </div>
+        </div>
+      </details>
+    </section>
+
     <section class="section dynamic-section">
       <div class="section-label">
         <h2>流光</h2>

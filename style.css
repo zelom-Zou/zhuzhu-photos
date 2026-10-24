@@ -303,6 +303,273 @@ main,
   color: var(--ink-faint);
 }
 
+/* ---------- 上传 ---------- */
+.upload-section {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.upload-card {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2.25rem 1.75rem 1.75rem;
+  text-align: center;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  box-shadow: 0 2px 10px var(--shadow), 0 12px 28px rgba(58, 42, 18, 0.06);
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.upload-card:hover,
+.upload-card:focus-visible,
+.upload-card.is-dragging {
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px var(--shadow), 0 16px 36px rgba(58, 42, 18, 0.1);
+  outline: none;
+}
+
+.upload-card.is-uploading {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.upload-symbol {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.75;
+}
+
+.upload-title {
+  margin-top: 0.75rem;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: var(--ink);
+}
+
+.upload-note {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.upload-status {
+  margin-top: 1.15rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  min-height: 1.5em;
+}
+
+.upload-status.is-error {
+  color: var(--accent);
+}
+
+.upload-count {
+  margin-top: 0.35rem;
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+
+/* ---------- 上传设置 ---------- */
+.token-panel {
+  max-width: 640px;
+  margin: 1rem auto 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.token-panel summary {
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  list-style: none;
+}
+
+.token-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.token-panel summary::after {
+  content: " ▾";
+}
+
+.token-panel[open] summary::after {
+  content: " ▴";
+}
+
+.token-panel.has-token summary {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.token-body {
+  margin-top: 0.9rem;
+  padding: 1.15rem 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+
+.token-hint {
+  line-height: 1.65;
+  color: var(--ink-faint);
+}
+
+.token-body input {
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.token-body input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.token-actions {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.token-actions button {
+  padding: 0.4rem 1.1rem;
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  color: var(--card);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.token-actions button:hover {
+  opacity: 0.82;
+}
+
+.token-actions button.is-plain {
+  color: var(--ink-soft);
+  background: transparent;
+  border-color: var(--line);
+}
+
+/* ---------- 访问口令 ---------- */
+/* 未解锁时整站不可见，解锁后才渲染内容 */
+html.auth-pending body > *:not(.auth-gate) {
+  display: none !important;
+}
+
+html:not(.auth-pending) .auth-gate {
+  display: none;
+}
+
+.auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 12% 8%, rgba(255, 255, 255, 0.55), transparent 55%),
+    radial-gradient(ellipse at 88% 92%, rgba(196, 170, 120, 0.18), transparent 50%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+}
+
+.auth-card {
+  width: min(400px, 100%);
+  padding: 2.5rem 1.75rem 2rem;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 10px var(--shadow), 0 18px 40px rgba(58, 42, 18, 0.1);
+}
+
+.auth-card .eyebrow {
+  margin-bottom: 1rem;
+}
+
+.auth-card h1 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  color: var(--ink);
+}
+
+.auth-hint {
+  margin-top: 0.9rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+}
+
+.auth-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.auth-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.auth-form button {
+  padding: 0.55rem 1.3rem;
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: var(--card);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.auth-form button:hover {
+  opacity: 0.82;
+}
+
+.auth-error {
+  min-height: 1.4em;
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
 /* ---------- 页脚 ---------- */
 .site-footer {
   text-align: center;
