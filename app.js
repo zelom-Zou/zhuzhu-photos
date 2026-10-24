@@ -32,6 +32,7 @@ const REPO = { owner: 'zelom-Zou', repo: 'zhuzhu-photos', branch: 'main' };
 const UPLOAD_DIR = 'photos-online';
 const UPLOAD_MANIFEST = 'photos-online.json';
 const TOKEN_KEY = 'zhuzhu-github-token';
+const API_BASE = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}`;
 
 let photos = [];
 let isUploading = false;
@@ -246,21 +247,88 @@ function getToken() {
   }
 }
 
-tokenSave.addEventListener('click', () => {
+const tokenResult = document.getElementById('token-result');
+
+function setTokenResult(message, isError = false) {
+  tokenResult.textContent = message;
+  tokenResult.classList.toggle('is-error', isError);
+}
+
+// 直接问 GitHub：这个 Token 是谁、有没有本仓库写权限
+async function verifyToken(token) {
+  const res = await fetch(`${API_BASE}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  if (res.status === 401) {
+    return {
+      ok: false,
+      message: 'Token 无效或已过期。要粘贴 github_pat_ 开头的那一整串，不是 Token 名称。',
+    };
+  }
+
+  if (res.status === 404) {
+    return {
+      ok: false,
+      message: '这个 Token 没有本仓库的权限，请在 Repository access 里勾选 zhuzhu-photos。',
+    };
+  }
+
+  if (!res.ok) {
+    return { ok: false, message: `GitHub 返回 ${res.status}，请稍后重试。` };
+  }
+
+  const repo = await res.json();
+  const permissions = repo.permissions || {};
+
+  if (!permissions.push) {
+    return {
+      ok: false,
+      message: 'Token 能读取仓库但没有写入权限，请把 Contents 设为 Read and write。',
+    };
+  }
+
+  return { ok: true, message: `验证通过，可以上传（仓库 ${repo.full_name}）。` };
+}
+
+tokenSave.addEventListener('click', async () => {
   const value = tokenInput.value.trim();
   if (!value) {
-    setStatus('请先粘贴 GitHub Token。', true);
+    setTokenResult('请先粘贴 GitHub Token。', true);
     return;
   }
+
+  tokenSave.disabled = true;
+  setTokenResult('正在向 GitHub 验证…');
+
   try {
-    localStorage.setItem(TOKEN_KEY, value);
+    const result = await verifyToken(value);
+
+    if (!result.ok) {
+      setTokenResult(result.message, true);
+      return;
+    }
+
+    try {
+      localStorage.setItem(TOKEN_KEY, value);
+    } catch {
+      setTokenResult('浏览器不允许保存本地数据，请检查隐私设置。', true);
+      return;
+    }
+
+    tokenInput.value = '';
+    setTokenResult(result.message);
+    updateUploadState();
+    setStatus('Token 已验证，可以开始上传。');
   } catch {
-    setStatus('浏览器不允许保存本地数据，请检查隐私设置。', true);
-    return;
+    setTokenResult('无法连接 GitHub，请检查网络后重试。', true);
+  } finally {
+    tokenSave.disabled = false;
   }
-  tokenInput.value = '';
-  updateUploadState();
-  setStatus('Token 已保存在本浏览器，可以开始上传。');
 });
 
 tokenClear.addEventListener('click', () => {
@@ -268,6 +336,7 @@ tokenClear.addEventListener('click', () => {
     localStorage.removeItem(TOKEN_KEY);
   } catch {}
   tokenInput.value = '';
+  setTokenResult('');
   updateUploadState();
   setStatus('已清除本浏览器的 Token。');
 });
@@ -377,8 +446,6 @@ async function compressImage(file) {
 }
 
 /* ---------- GitHub API ---------- */
-
-const API_BASE = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}`;
 
 function arrayBufferToBase64(input) {
   const bytes = new Uint8Array(input);

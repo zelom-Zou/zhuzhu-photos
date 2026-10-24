@@ -468,6 +468,24 @@ main,
   border-color: var(--line);
 }
 
+.token-actions button:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+.token-result {
+  min-height: 1.4em;
+  margin-top: 0.7rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.token-result.is-error {
+  color: var(--accent);
+}
+
 /* ---------- 访问口令 ---------- */
 /* 未解锁时整站不可见，解锁后才渲染内容 */
 html.auth-pending body > *:not(.auth-gate) {
